@@ -1,2 +1,4 @@
 send-mail-pycli
 ---------------
+
+1. rename default.ini to email.ini and set your email/smtp config

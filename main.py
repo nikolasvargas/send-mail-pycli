@@ -17,12 +17,18 @@ SMTP_SERVER: str = config['SERVER']['HOST']
 PORT: int = int(config['SERVER']['PORT'])
 
 subject = "Ocorrência Ponto - data"
-text = """\
+
+h1 = input()
+h2 = input()
+h3 = input()
+h4 = input()
+
+text = f"""\
 Informo ocorrência para registro do ponto biométrico, no dia DATE
 
-00h00 - Trabalhando home-office;
-00h00 - 00h00 Intervalo;
-00h00 - Saída;
+{h1} - Trabalhando home-office;
+{h2} - {h3} Intervalo;
+{h4} - Saída;
 
 
 Att,
