@@ -16,15 +16,21 @@ PASSWORD: str = config['MAIL']['PASSWD']
 SMTP_SERVER: str = config['SERVER']['HOST']
 PORT: int = int(config['SERVER']['PORT'])
 
-subject = "Ocorrência Ponto - data"
 
-h1 = input()
-h2 = input()
-h3 = input()
-h4 = input()
+def _input(label: str) -> str:
+    return input(label).strip()
+
+
+date = _input('date: ')
+h1 = _input('start: ')
+h2 = _input('lunch start: ')
+h3 = _input('lunch end: ')
+h4 = _input('end: ')
+
+subject = f'Ocorrência Ponto - {date}'
 
 text = f"""\
-Informo ocorrência para registro do ponto biométrico, no dia DATE
+Informo ocorrência para registro do ponto biométrico, no dia {date}
 
 {h1} - Trabalhando home-office;
 {h2} - {h3} Intervalo;
@@ -43,25 +49,32 @@ Telefone:(51) 3333-7025
 http://www.ufrgs.br/telessauders/
 """
 
-message = MIMEMultipart("alternative")
-message['From'] = SENDER_EMAIL
-message["To"] = RECEIVER_EMAIL
-message["Cc"] = CC_MAIL
 
-message['Subject'] = subject
-message.attach(MIMEText(text, "plain"))
+def _get_message() -> MIMEMultipart:
+    message = MIMEMultipart('alternative')
+    message['From'] = SENDER_EMAIL
+    message['To'] = RECEIVER_EMAIL
+    message['Cc'] = CC_MAIL
+    message['Bcc'] = SENDER_EMAIL
+    message['Subject'] = subject
+    message.attach(MIMEText(text, 'plain'))
+
+    return message
 
 
 def run() -> bool:
+    msg = _get_message()
     context = ssl.create_default_context()
+
     with smtplib.SMTP_SSL(SMTP_SERVER, PORT, context=context) as server:
         try:
             server.login(SENDER_EMAIL, PASSWORD)
-            server.send_message(message)
+            server.send_message(msg)
         except Exception as error:
             print(error)
         else:
             return True
+
     return False
 
 
