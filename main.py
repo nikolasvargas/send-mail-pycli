@@ -4,6 +4,7 @@ import ssl
 
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from typing import Optional
 
 
 config = configparser.ConfigParser()
@@ -11,7 +12,8 @@ config.read('email.ini')
 
 SENDER_EMAIL: str = config['MAIL']['FROM']
 RECEIVER_EMAIL: str = config['MAIL']['TO']
-CC_MAIL: str = config['MAIL'].get('CC', None)
+CC_MAIL: Optional[str] = config['MAIL'].get('CC', None)
+BCC_MAIL: Optional[str] = config['MAIL'].get('BCC', None)
 PASSWORD: str = config['MAIL']['PASSWD']
 SMTP_SERVER: str = config['SERVER']['HOST']
 PORT: int = int(config['SERVER']['PORT'])
@@ -55,7 +57,7 @@ def _get_message() -> MIMEMultipart:
     message['From'] = SENDER_EMAIL
     message['To'] = RECEIVER_EMAIL
     message['Cc'] = CC_MAIL
-    message['Bcc'] = SENDER_EMAIL
+    message['Bcc'] = BCC_MAIL or SENDER_EMAIL
     message['Subject'] = subject
     message.attach(MIMEText(text, 'plain'))
 
