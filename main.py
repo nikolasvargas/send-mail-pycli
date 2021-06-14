@@ -8,7 +8,7 @@ from typing import Optional
 
 
 config = configparser.ConfigParser()
-config.read('email.ini')
+config.read('mail.ini')
 
 SENDER_EMAIL: str = config['MAIL']['FROM']
 RECEIVER_EMAIL: str = config['MAIL']['TO']
